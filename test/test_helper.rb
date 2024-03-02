@@ -28,6 +28,12 @@ def stub_api_requests(api_key)
   stub_get("https://api.swiftner.com/video-content/get/1", { id: 1, media_type: "video" }.to_json, api_key)
   stub_put("https://api.swiftner.com/video-content/update/1", api_key)
 
+  stub_get("https://api.swiftner.com/linked-content/get-all/", [{ id: 1, type: "linked_content" }].to_json, api_key)
+  stub_get("https://api.swiftner.com/linked-content/get/1", { id: 1, type: "linked_content" }.to_json, api_key)
+  stub_post("https://api.swiftner.com/linked-content/create", api_key)
+  stub_put("https://api.swiftner.com/linked-content/update/1", api_key)
+  stub_get("https://api.swiftner.com/linked-content/get/1/transcriptions", [{ id: 1, language: "en" }].to_json, api_key)
+
   stub_get("https://api.swiftner.com/space/get-spaces", [{ id: 1, name: "test", description: "test" }].to_json, api_key)
   stub_get("https://api.swiftner.com/space/get/1", { id: 1, name: "test", description: "test" }.to_json, api_key)
   stub_post("https://api.swiftner.com/space/create", api_key)
@@ -61,7 +67,7 @@ def stub_put(url, api_key)
     .with(headers: { "Api_Key_Header" => api_key })
     .to_return do |request|
     persisted_body = JSON.parse(request.body)
-    persisted_body["id"] = 1
+    persisted_body.is_a?(Array) ? persisted_body.map { |i| i["id"] = 1 } : 
     { status: 200, body: persisted_body.to_json, headers: { "Content-Type" => "application/json" } }
   end
 end
