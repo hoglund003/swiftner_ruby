@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 class LinkedContentTest < Minitest::Test
   def setup
@@ -25,6 +25,11 @@ class LinkedContentTest < Minitest::Test
     assert linked_content.is_a?(Swiftner::API::LinkedContent)
     refute_nil linked_content.id
     assert_equal "Sample title", linked_content.details["title"]
+  end
+
+  def test_batch_create_linked_content
+    linked_contents = @linked_content_service.batch_create([sample_attributes])
+    assert linked_contents.is_a?(Array)
   end
 
   def test_update_linked_content

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require_relative "service"
-
 module Swiftner
   module API
-    # Docs (remember to do!)
-    class LinkedContent < Service   
+    # Represents a LinkedContent service responsible for finding, creating, and updating linked content.
+    # Inherits from the Service class.
+    # Provides methods for interacting with linked content.
+    class LinkedContent < Service
       def self.find_linked_contents
         response = client.get("/linked-content/get-all/")
         map_collection(response)
@@ -26,6 +26,18 @@ module Swiftner
         )
 
         build(response.parsed_response)
+      end
+
+      def self.batch_create(array_of_attributes)
+        array_of_attributes.each { |attributes| validate_required(attributes, :url) }
+
+        response = client.post(
+          "/linked-content/batch-create",
+          body: array_of_attributes.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+        map_collection(response)
       end
 
       def update(attributes)
